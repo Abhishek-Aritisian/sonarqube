@@ -14,7 +14,7 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t abhishep006/kubernetes:$$BUILD_NUMBER .'
+                    sh 'docker build -t abhishep006/kubernetes:$$BUILD_NUMBER .'
                 }
             }
         }
