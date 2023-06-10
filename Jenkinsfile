@@ -31,7 +31,7 @@ pipeline {
         }
         stage('SonarQube Analysis Stage') {
             steps{
-                withSonarQubeEnv('sonar-test') { 
+                withSonarQubeEnv('sonar') { 
                     bat "mvn clean verify sonar:sonar --Dsonar.host.url=http://52.66.206.71:9000/=sonar-test"
                 }
             }
