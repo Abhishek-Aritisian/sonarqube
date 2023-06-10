@@ -3,6 +3,7 @@ pipeline {
     tools{
         maven 'maven'
     }
+    
     stages{
         stage('Build Maven'){
             steps{
@@ -10,17 +11,17 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('Deploy to K8s'){
+        stage('SonarQube Analysis Stage') {
             steps{
-                script{
-                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'kubernetes')
+                withSonarQubeEnv('sonar') { 
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-test"
                 }
             }
         }
         stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t abhishep006/kubernetes:$BUILD_NUMBER .'
+                    sh 'docker build -t abhishekp006/kubernetes:$BUILD_NUMBER .'
                 }
             }
         }
@@ -28,18 +29,13 @@ pipeline {
             steps{
                 script{
                     withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerhubpwd')]) {
-                    sh 'docker login -u abhishep006 -p ${dockerhubpwd}'
+                    sh 'docker login -u abhishekp006 -p ${dockerhubpwd}'
                         
                     }
-                    sh 'docker push abhishep006/kubernetes:$BUILD_NUMBER''
+                    sh 'docker push abhishekp006/kubernetes:$BUILD_NUMBER'
                 }
             }
         }
-         stage('Build Stage'){
-            steps{
-                sh 'mvn clean install'
-            }
-         }
         stage('Deploy to K8s'){
             steps{
                 script{
