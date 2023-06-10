@@ -43,6 +43,17 @@ pipeline {
                 }
             }
         }
-    
+        stage('Create HPA in K8s') {
+            steps {
+                script {
+                    def deploymentName = '<deployment-name>'
+                    def targetCPUUtilization = '80'
+                    def minPods = '1'
+                    def maxPods = '10'
+                    
+                    sh "kubectl autoscale deployment ${deploymentName} --cpu-percent=${targetCPUUtilization} --min=${minPods} --max=${maxPods}"
+                }
+            }
+        }
     }    
 }
