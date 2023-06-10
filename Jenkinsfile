@@ -11,6 +11,13 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+        stage('Deploy to K8s'){
+            steps{
+                script{
+                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'kubernetes')
+                }
+            }
+        }
         stage('Build docker image'){
             steps{
                 script{
