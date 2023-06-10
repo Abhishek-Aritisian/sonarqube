@@ -11,13 +11,6 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('SonarQube Analysis Stage') {
-            steps{
-                withSonarQubeEnv('sonar-test') { 
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-test"
-                }
-            }
-        }
         stage('Build docker image'){
             steps{
                 script{
@@ -28,11 +21,18 @@ pipeline {
         stage('Push image to hub'){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerhubpwd')]) {
+                    withCredentials([string(credentialsId: 'dockerpwd', variable: 'dockerhubpwd')]) {
                     sh 'docker login -u abhishekp006 -p ${dockerhubpwd}'
                         
                     }
                     sh 'docker push abhishekp006/kubernetes:$BUILD_NUMBER'
+                }
+            }
+        }
+        stage('SonarQube Analysis Stage') {
+            steps{
+                withSonarQubeEnv('sonar') { 
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-test"
                 }
             }
         }
