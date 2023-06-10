@@ -32,7 +32,7 @@ pipeline {
         stage('SonarQube Analysis Stage') {
             steps{
                 withSonarQubeEnv('sonar-test') { 
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-test"
+                    bat "mvn clean verify sonar:sonar --Dsonar.host.url=http://52.66.206.71:9000/=sonar-test"
                 }
             }
         }
