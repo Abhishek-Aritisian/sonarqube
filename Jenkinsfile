@@ -3,7 +3,6 @@ pipeline {
     tools{
         maven 'maven'
     }
-    
     stages{
         stage('Build Maven'){
             steps{
@@ -41,13 +40,6 @@ pipeline {
                 sh 'mvn clean install'
             }
          }
-        stage('SonarQube Analysis Stage') {
-            steps{
-                withSonarQubeEnv('sonarqube') { 
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar-test"
-                }
-            }
-        }
         stage('Deploy to K8s'){
             steps{
                 script{
