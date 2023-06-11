@@ -39,7 +39,7 @@ pipeline {
         stage('Create HPA in K8s') {
             steps {
                 script {
-                    def deploymentName = '<spring-boot-k8s>'
+                    def deploymentName = 'Deployment'
                     def targetCPUUtilization = '80'
                     def minPods = '1'
                     def maxPods = '10'
