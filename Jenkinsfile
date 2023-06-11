@@ -39,7 +39,7 @@ pipeline {
         stage('Create HPA in K8s') {
             steps {
                 script {
-                    def deploymentName = 'Deployment'
+                    def deploymentName = 'deploymentservice.yaml'
                     def targetCPUUtilization = '80'
                     def minPods = '1'
                     def maxPods = '10'
