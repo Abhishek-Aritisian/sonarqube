@@ -44,9 +44,9 @@ pipeline {
                     def minPods = '1'
                     def maxPods = '10'
                     
-                    def kubeconfigPath = '/path/to/deployment.yaml'
+                    def kubeconfigPath = '/path/to/service.yaml'
                     
-                    sh "kubectl --kubeconfig=${kubeconfigPath} apply -f /path/to/deployment.yaml"
+                    sh "kubectl --kubeconfig=${kubeconfigPath} apply -f /path/to/service.yaml"
                     
                     sh "kubectl --kubeconfig=${kubeconfigPath} autoscale deployment ${deploymentName} --cpu-percent=${targetCPUUtilization} --min=${minPods} --max=${maxPods}"
                 }
