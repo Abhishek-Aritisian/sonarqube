@@ -44,7 +44,9 @@ pipeline {
                     def minPods = '1'
                     def maxPods = '10'
                     
-                    sh "kubectl autoscale deployment ${deploymentName} --cpu-percent=${targetCPUUtilization} --min=${minPods} --max=${maxPods}"
+                    env.KUBECONFIG = '/path/to/kubeconfig'
+                    
+                     sh "kubectl --kubeconfig=${env.KUBECONFIG} autoscale deployment ${deploymentName} --cpu-percent=${targetCPUUtilization} --min=${minPods} --max=${maxPods}"
                 }
             }
         }
