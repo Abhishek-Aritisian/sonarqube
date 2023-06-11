@@ -29,23 +29,14 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to K8s'){
-            steps{
-                script{
-                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'kubernetes')
-                }
-            }
-        }
-        stage('Create HPA in K8s') {
+       stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    def deploymentName = 'Deployment'
-                    def targetCPUUtilization = '80'
-                    def minPods = '1'
-                    def maxPods = '10'
-                    def kubeconfigPath = '/path/to/deploymentservice.yaml'
-                    sh "kubectl --kubeconfig=${kubeconfigPath} apply -f /path/to/deploymentservice.yaml"
-                    sh "kubectl --kubeconfig=${kubeconfigPath} autoscale deployment ${deploymentName} --cpu-percent=${targetCPUUtilization} --min=${minPods} --max=${maxPods}"
+                    def kubeconfigPath = '/path/to/kubeconfig'
+                    def deploymentConfigPath = '/path/to/deploymentservice.yaml'
+                    
+                    sh "kubectl --kubeconfig=${kubeconfigPath} apply -f ${deploymentConfigPath}"
+                    sh "kubectl --kubeconfig=${kubeconfigPath} autoscale deployment Deployment --cpu-percent=80 --min=1 --max=10"              
                 }
             }
         }
