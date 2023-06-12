@@ -29,14 +29,10 @@ pipeline {
                 }
             }
         }
-       stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    def kubeconfigPath = '/path/to/kubeconfig'
-                    def deploymentConfigPath = '/path/to/deploymentservice.yaml'
-                    
-                    sh "kubectl --kubeconfig=${kubeconfigPath} apply -f ${deploymentConfigPath}"
-                    sh "kubectl --kubeconfig=${kubeconfigPath} autoscale deployment Deployment --cpu-percent=80 --min=1 --max=10"              
+         stage('Deploy to K8s'){
+            steps{
+                script{
+                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'kubernetes')
                 }
             }
         }
