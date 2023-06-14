@@ -2,7 +2,6 @@ pipeline {
     agent any
     tools{
         maven 'maven'
-        sonarQubeScanner 'sonarqube'
     }
     
     stages{
@@ -12,17 +11,17 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
         stage('Build docker image'){
             steps{
                 script{
                     sh 'docker build -t abhishekp006/kubernetes:$BUILD_NUMBER .'
+                }
+            }
+        }
+        stage('SonarQube Analysis Stage') {
+            steps{
+                withSonarQubeEnv('sonar') { 
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar"
                 }
             }
         }
@@ -34,13 +33,6 @@ pipeline {
                         
                     }
                     sh 'docker push abhishekp006/kubernetes:$BUILD_NUMBER'
-                }
-            }
-        }
-        stage('SonarQube Analysis Stage') {
-            steps{
-                withSonarQubeEnv('sonar') { 
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=sonar"
                 }
             }
         }
