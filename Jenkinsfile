@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools{
         maven 'maven'
+        sonarQubeScanner 'sonarqube'
     }
     
     stages{
@@ -9,6 +10,13 @@ pipeline {
             steps{
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Abhijan2023/devops-automation.git']]])
                 sh 'mvn clean install'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
             }
         }
         stage('Build docker image'){
